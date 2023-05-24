@@ -14,16 +14,17 @@ import oracle.jdbc.datasource.impl.OracleDataSource;
 public class MainOracle {
 
 	public static void main(String[] args) {
-		OracleDataSource ods;
+		OracleDataSource ods = null;
+		Connection conn = null;
 		try {
 			ods = new OracleDataSource();
 			MyDataSource mds = ConnectionManager.getDataSource("src/main/resources/db.properties");
 
-			//String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+			// String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
 			ods.setURL(mds.getUrl());
 			ods.setUser(mds.getUser());
 			ods.setPassword(mds.getPwd());
-			Connection conn = ods.getConnection();
+			conn = ods.getConnection();
 
 			// Create Oracle DatabaseMetaData object
 			DatabaseMetaData meta = conn.getMetaData();
@@ -53,6 +54,15 @@ public class MainOracle {
 		} catch (SQLException e) {
 			System.err.println("Ha ocurrido una exception: " + e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					System.err.println("Ha ocurrido una exception cerrando la conexión: " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
