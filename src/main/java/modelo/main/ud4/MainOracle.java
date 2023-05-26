@@ -2,6 +2,7 @@ package modelo.main.ud4;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -20,12 +21,16 @@ public class MainOracle {
 			ods = new OracleDataSource();
 			MyDataSource mds = ConnectionManager.getDataSource("src/main/resources/db.properties");
 
-			// String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
-			ods.setURL(mds.getUrl());
-			ods.setUser(mds.getUser());
-			ods.setPassword(mds.getPwd());
-			conn = ods.getConnection();
+			//Solución 1: 
+//			ods.setURL(mds.getUrl());
+//			ods.setUser(mds.getUser());
+//			ods.setPassword(mds.getPwd());
+//			conn = ods.getConnection();
 
+			//Solución 2
+			conn = DriverManager.getConnection(mds.getUrl(), mds.getUser(), mds.getPwd());
+			
+			
 			// Create Oracle DatabaseMetaData object
 			DatabaseMetaData meta = conn.getMetaData();
 
